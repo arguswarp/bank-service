@@ -11,3 +11,6 @@ spring:
       ddl-auto: none
   liquibase:
     enabled: false
+  token:
+    signing:
+      key: ${SECRET}
