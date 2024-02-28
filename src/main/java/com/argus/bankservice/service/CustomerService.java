@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CustomerService {
 
-    Customer addUser(SignUpRequest signUpRequest);
+    Customer create(SignUpRequest signUpRequest);
 
     Boolean updatePhone(String phone, Contact contact, Customer customer);
 
