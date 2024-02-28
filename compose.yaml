@@ -1,0 +1,36 @@
+version: '0.1'
+
+services:
+  app:
+    container_name: bank-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DB_URL=$DB_URL
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - TOKEN_SECRET=$TOKEN_SECRET
+    ports:
+      - 8080:8080
+    networks:
+      - bank-net
+    restart: unless-stopped
+  db:
+    image: postgres:16
+    container_name: bank-db
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    ports:
+      - 5432:5432
+    networks:
+      - bank-net
+    volumes:
+      - bank_data:/var/lib/postgresql/data
+volumes:
+  bank_data:
+networks:
+  bank-net:

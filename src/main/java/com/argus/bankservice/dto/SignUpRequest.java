@@ -1,5 +1,6 @@
 package com.argus.bankservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,13 +24,18 @@ public class SignUpRequest {
     @NotBlank
     @Email
     private String email;
+    /**
+     * Телефон в международном формате, например +70001234567
+     */
     @NotBlank
+    @Pattern(regexp = "^\\+[1-9]\\d{10}$")
     private String phone;
     @Size(min = 5, max = 50, message = "ФИО должно содержать от 5 до 100 символов")
     @NotBlank
     private String fullName;
 
     @PastOrPresent(message = "Дата рождения не должна быть в будущем")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate dateOfBirth;
     @Positive
     private BigDecimal deposit;

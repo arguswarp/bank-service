@@ -12,12 +12,13 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @PositiveOrZero
+    @Column(name = "deposit", nullable = false)
     private BigDecimal deposit;
-    @OneToOne
+    @OneToOne(mappedBy = "account")
     private Customer owner;
 }

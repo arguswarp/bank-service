@@ -3,7 +3,6 @@ package com.argus.bankservice.entity;
 import com.argus.bankservice.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,13 +14,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Table(name = "customer")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-
+    @Column(name = "password", unique = true, nullable = false)
     private String password;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -29,20 +29,20 @@ public class Customer {
     /**
      * ФИО
      */
+    @Column(name = "full_name", nullable = false)
     private String fullName;
-
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
-
+    @Column(name = "phone", unique = true, nullable = false)
     private String phone;
-
+    @Column(name = "date_of_birth", unique = true, nullable = false)
     private LocalDate dateOfBirth;
     /**
      * дополнительные контакты
      */
-    @NotNull
-    @OneToMany
+    @OneToMany(mappedBy = "owner")
     private List<Contact> contacts;
-    @NotNull
+
     @OneToOne
     private Account account;
 }

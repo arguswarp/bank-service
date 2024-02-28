@@ -1,8 +1,6 @@
 package com.argus.bankservice.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Builder
@@ -11,16 +9,17 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Table(name = "contact")
 public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //TODO: add pattern for phone number
-    @Pattern(regexp = "")
+    @Column(name = "phone", unique = true)
     private String phone;
-    @Email
+    @Column(name = "email", unique = true)
     private String email;
     @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer owner;
 }
