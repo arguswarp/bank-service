@@ -8,13 +8,23 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CustomerService {
 
-    Customer create(SignUpRequest signUpRequest);
+    Customer create(Customer customer);
 
-    Boolean updatePhone(String phone, Contact contact, Customer customer);
+    Customer save(Customer customer);
 
-    Boolean addPhone(String phone, Contact contact, Customer customer);
+    Customer getByUsername(String username);
 
-    Boolean updateEmail(String email, Contact contact, Customer customer);
+    /**
+     * Получение пользователя из контекста Spring Security
+     * @return Customer
+     */
+    Customer getCurrentCustomer();
 
-    Boolean addEmail(String email, Contact contact, Customer customer);
+    Boolean updatePhone(String phone, Long id, Contact contact, Customer customer);
+
+    Boolean addPhone(String phone,Long id, Contact contact, Customer customer);
+
+    Boolean updateEmail(String email, Long id,Contact contact, Customer customer);
+
+    Boolean addEmail(String email,Long id, Contact contact, Customer customer);
 }
