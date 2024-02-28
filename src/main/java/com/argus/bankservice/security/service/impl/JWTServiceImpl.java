@@ -1,7 +1,7 @@
-package com.argus.bankservice.security.impl;
+package com.argus.bankservice.security.service.impl;
 
 import com.argus.bankservice.security.CustomerDetails;
-import com.argus.bankservice.security.JWTService;
+import com.argus.bankservice.security.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -33,7 +33,8 @@ public class JWTServiceImpl implements JWTService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof CustomerDetails customerDetails) {
             claims.put("id", customerDetails.getCustomer().getId());
-            claims.put("contacts", customerDetails.getCustomer().getContacts());
+            claims.put("email", customerDetails.getCustomer().getEmail());
+            claims.put("phone", customerDetails.getCustomer().getPhone());
             claims.put("role", customerDetails.getCustomer().getRole());
         }
         return generateToken(claims, userDetails);

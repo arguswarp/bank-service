@@ -2,6 +2,9 @@ package com.argus.bankservice.dto;
 
 import jakarta.validation.constraints.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 public class SignUpRequest {
     @Size(min = 5, max = 50, message = "Имя пользователя должно содержать от 5 до 50 символов")
     @NotBlank(message = "Имя пользователя не может быть пустыми")
@@ -14,6 +17,12 @@ public class SignUpRequest {
     private String email;
     @NotBlank
     private String phone;
+    @Size(min = 5, max = 50, message = "ФИО должно содержать от 5 до 100 символов")
+    @NotBlank
+    private String fullName;
+
+    @PastOrPresent(message = "Дата рождения не должна быть в будущем")
+    private LocalDate dateOfBirth;
     @Positive
-    private Double deposit;
+    private BigDecimal deposit;
 }

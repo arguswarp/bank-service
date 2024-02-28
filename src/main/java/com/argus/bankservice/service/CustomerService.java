@@ -3,6 +3,7 @@ package com.argus.bankservice.service;
 import com.argus.bankservice.dto.SignUpRequest;
 import com.argus.bankservice.entity.Contact;
 import com.argus.bankservice.entity.Customer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,8 @@ public interface CustomerService {
     Customer save(Customer customer);
 
     Customer getByUsername(String username);
+
+    UserDetailsService userDetailsService();
 
     /**
      * Получение пользователя из контекста Spring Security

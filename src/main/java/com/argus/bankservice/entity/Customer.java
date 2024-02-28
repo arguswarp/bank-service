@@ -30,9 +30,15 @@ public class Customer {
      * ФИО
      */
     private String fullName;
-    //TODO: better validation
-    @PastOrPresent
+
+    private String email;
+
+    private String phone;
+
     private LocalDate dateOfBirth;
+    /**
+     * дополнительные контакты
+     */
     @NotNull
     @OneToMany
     private List<Contact> contacts;

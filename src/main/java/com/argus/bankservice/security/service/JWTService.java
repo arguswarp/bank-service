@@ -1,4 +1,4 @@
-package com.argus.bankservice.security;
+package com.argus.bankservice.security.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
