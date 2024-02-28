@@ -3,13 +3,14 @@ package com.argus.bankservice.security.service.impl;
 import com.argus.bankservice.dto.JwtAuthenticationResponse;
 import com.argus.bankservice.dto.SignInRequest;
 import com.argus.bankservice.dto.SignUpRequest;
+import com.argus.bankservice.entity.Account;
 import com.argus.bankservice.entity.Customer;
+import com.argus.bankservice.entity.enums.Role;
 import com.argus.bankservice.security.CustomerDetails;
 import com.argus.bankservice.security.service.AuthenticationService;
 import com.argus.bankservice.security.service.JWTService;
 import com.argus.bankservice.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +25,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final ModelMapper modelMapper;
-
     /**
      * Регистрация пользователя
      *
@@ -34,7 +33,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        var customer = modelMapper.map(signUpRequest, Customer.class);
+        var customer = Customer.builder()
+                .username(signUpRequest.getUsername())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .role(Role.ROLE_USER)
+                .phone(signUpRequest.getPhone())
+                .fullName(signUpRequest.getFullName())
+                .dateOfBirth(signUpRequest.getDateOfBirth())
+                .account(Account.builder()
+                        .deposit(signUpRequest.getDeposit())
+                        .build())
+                .build();
+        customer.getAccount().setOwner(customer);
         customerService.create(customer);
         var token = jwtService.generateToken(new CustomerDetails(customer));
         return new JwtAuthenticationResponse(token);

@@ -1,7 +1,5 @@
 package com.argus.bankservice.service;
 
-import com.argus.bankservice.dto.SignUpRequest;
-import com.argus.bankservice.entity.Contact;
 import com.argus.bankservice.entity.Customer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -19,15 +17,18 @@ public interface CustomerService {
 
     /**
      * Получение пользователя из контекста Spring Security
+     *
      * @return Customer
      */
     Customer getCurrentCustomer();
 
-    Boolean updatePhone(String phone, Long id, Contact contact, Customer customer);
+    Boolean updatePhone(String phone, Customer customer);
 
-    Boolean addPhone(String phone,Long id, Contact contact, Customer customer);
+    Boolean addPhone(String phone, Customer customer);
 
-    Boolean updateEmail(String email, Long id,Contact contact, Customer customer);
+    Boolean updateEmail(String email, Customer customer);
 
-    Boolean addEmail(String email,Long id, Contact contact, Customer customer);
+    Boolean addEmail(String email, Customer customer);
+
+    Boolean addEmailAndPhone(String email, String phone, Customer customer);
 }

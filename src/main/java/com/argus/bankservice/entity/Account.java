@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,9 +16,8 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //TODO: mb use BigDecimal?
     @PositiveOrZero
-    private Double deposit;
+    private BigDecimal deposit;
     @OneToOne
     private Customer owner;
 }
