@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,9 +37,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param signUpRequest данные для регистрации
      * @return jwt токен
      */
+    @Transactional
     @Override
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        var account = Account.builder().deposit(signUpRequest.getDeposit()).build();
+        var account = Account.builder().deposit(signUpRequest.getDeposit()).balance(signUpRequest.getDeposit()).build();
         var customer = Customer.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
@@ -62,6 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param signInRequest данные для входа
      * @return jwt токен
      */
+    @Transactional(readOnly = true)
     @Override
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

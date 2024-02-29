@@ -18,12 +18,12 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
-    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
+    public JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest request) {
         return authenticationService.signUp(request);
     }
 
     @PostMapping("/sign-in")
-    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
+    public JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest request) {
         return authenticationService.signIn(request);
     }
 }
