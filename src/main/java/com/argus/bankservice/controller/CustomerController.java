@@ -3,8 +3,8 @@ package com.argus.bankservice.controller;
 import com.argus.bankservice.dto.ContactDTO;
 import com.argus.bankservice.dto.ContactUpdateDTO;
 import com.argus.bankservice.entity.Customer;
-import com.argus.bankservice.security.CustomerDetails;
 import com.argus.bankservice.service.CustomerService;
+import com.argus.bankservice.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +28,6 @@ import java.util.Map;
 @Slf4j
 public class CustomerController {
     private final CustomerService customerService;
-
-    @GetMapping("/balance")
-    public ResponseEntity<?> showBalance(Authentication authentication) {
-        var customer = getCustomer(authentication);
-        return ResponseEntity.ok(customer.getAccount());
-    }
 
     @GetMapping("/search")
     public ResponseEntity<?> getFiltered(
@@ -101,14 +95,14 @@ public class CustomerController {
 
     @PostMapping("/contact/add")
     public ResponseEntity<?> addContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication) {
-        var customer = getCustomer(authentication);
+        var customer = AuthUtils.getCustomer(authentication);
         customerService.addContact(contactDTO, customer);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/contact/delete")
     public ResponseEntity<?> deleteContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication) {
-        var customer = getCustomer(authentication);
+        var customer = AuthUtils.getCustomer(authentication);
         if (contactDTO.getPhone() != null) {
             customerService.deletePhone(contactDTO.getPhone(), customer);
             return ResponseEntity.ok().build();
@@ -122,17 +116,12 @@ public class CustomerController {
 
     @PatchMapping("/contact/update")
     public ResponseEntity<?> updateContact(@Valid @RequestBody ContactUpdateDTO contactUpdateDTO, @RequestParam(required = false) String type, Authentication authentication) {
-        var customer = getCustomer(authentication);
+        var customer = AuthUtils.getCustomer(authentication);
         if (type != null && type.equals("additional")) {
             customerService.updateAdditionalContact(contactUpdateDTO, customer);
             return ResponseEntity.ok().build();
         }
         customerService.updateContact(contactUpdateDTO, customer);
         return ResponseEntity.ok().build();
-    }
-
-    private Customer getCustomer(Authentication authentication) {
-        var customerDetails = (CustomerDetails) authentication.getPrincipal();
-        return customerDetails.getCustomer();
     }
 }

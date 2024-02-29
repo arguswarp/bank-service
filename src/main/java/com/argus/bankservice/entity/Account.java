@@ -22,7 +22,7 @@ public class Account {
     @Column(name = "deposit", nullable = false)
     private BigDecimal deposit;
 
-    @Column(name = "deposit", nullable = false)
+    @Column(name = "balance", nullable = false)
     private BigDecimal balance;
     @JsonIgnore
     @ToString.Exclude
