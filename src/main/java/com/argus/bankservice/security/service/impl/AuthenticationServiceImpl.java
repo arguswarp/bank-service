@@ -48,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .fullName(signUpRequest.getFullName())
                 .dateOfBirth(signUpRequest.getDateOfBirth())
                 .build();
-        customerService.save(customer);
+        customerService.create(customer);
         customer.setAccount(account);
         account.setOwner(customer);
         accountRepository.save(account);
