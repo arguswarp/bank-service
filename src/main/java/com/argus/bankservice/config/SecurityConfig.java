@@ -1,5 +1,6 @@
 package com.argus.bankservice.config;
 
+import com.argus.bankservice.security.AuthEntryPointJWT;
 import com.argus.bankservice.security.JWTAuthenticationFilter;
 import com.argus.bankservice.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,12 @@ public class SecurityConfig {
 
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final CustomerService customerService;
+    private final AuthEntryPointJWT unauthorizedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOriginPatterns(List.of("*"));
@@ -45,7 +48,7 @@ public class SecurityConfig {
                 //Настройка доступа к эндпойнтам
                 .authorizeHttpRequests(request -> request
                         // Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
-                        .requestMatchers("/auth/**", "/v3/api-docs/**","/swagger-ui/**").permitAll()
+                        .requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
