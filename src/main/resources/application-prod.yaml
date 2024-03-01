@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: true
+token:
+  signing:
+    key: ${TOKEN_SECRET}
+  expiration:
+    minutes: ${EXP_MINUTES}

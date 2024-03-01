@@ -18,4 +18,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.badRequest()
                 .body(Map.of("error", exception.getMessage()));
     }
+
+    @ExceptionHandler({DatabaseLockException.class})
+    private ResponseEntity<Object> handleDatabaseBlockException(RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
+        return ResponseEntity.internalServerError()
+                .body(Map.of("error", exception.getMessage()));
+    }
 }

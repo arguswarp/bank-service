@@ -30,7 +30,7 @@ public class AccountController {
     @PatchMapping("/withdraw")
     public ResponseEntity<?> withdrawMoney(@Valid @RequestBody ChangeBalanceRequest withdrawRequest, Authentication authentication) {
         var customer = AuthUtils.getCustomer(authentication);
-        var account = accountService.withdraw(withdrawRequest.getAmount(), accountService.findByOwner(customer));
+        var account = accountService.withdraw(withdrawRequest.getAmount(), customer);
         log.info(String.format("Пользователь: %s вывел средства в кол-ве: %.2f, текущий баланс: %.2f",
                 customer.getUsername(),
                 withdrawRequest.getAmount(),
@@ -42,7 +42,7 @@ public class AccountController {
     @PatchMapping("/replenish")
     public ResponseEntity<?> replenishMoney(@Valid @RequestBody ChangeBalanceRequest withdrawRequest, Authentication authentication) {
         var customer = AuthUtils.getCustomer(authentication);
-        var account = accountService.replenish(withdrawRequest.getAmount(), accountService.findByOwner(customer));
+        var account = accountService.replenish(withdrawRequest.getAmount(), customer);
         log.info(String.format("Пользователь: %s пополнил баланс на сумму: %.2f, текущий баланс: %.2f",
                 customer.getUsername(),
                 withdrawRequest.getAmount(),
@@ -58,16 +58,9 @@ public class AccountController {
         var customer = AuthUtils.getCustomer(authentication);
         var accountFrom = accountService.findByOwner(customer);
         var customerTo = customerService.findById(id);
-        var accountTo = customerTo.getAccount();
 
-        accountService.transfer(withdrawRequest.getAmount(), accountFrom, accountTo);
-        log.info(String.format("Пользователь 1: %s перевел средства пользователю 2: %s, в кол-ве: %.2f, текущий баланс 1: %.2f, текущий баланс 2: %.2f",
-                customer.getUsername(),
-                customerTo.getUsername(),
-                withdrawRequest.getAmount(),
-                accountFrom.getBalance(),
-                accountTo.getBalance()
-        ));
+        accountService.transfer(withdrawRequest.getAmount(), customer, customerTo);
+
         return ResponseEntity.ok(accountFrom.getBalance());
     }
 }

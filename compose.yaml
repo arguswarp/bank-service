@@ -13,6 +13,7 @@ services:
       - DB_USERNAME=$DB_USERNAME
       - DB_PASSWORD=$DB_PASSWORD
       - TOKEN_SECRET=$TOKEN_SECRET
+      - EXP_MINUTES=$EXP_MINUTES
     ports:
       - 8080:8080
     networks:
@@ -24,6 +25,7 @@ services:
     environment:
       - POSTGRES_USER=$DB_USERNAME
       - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=bank_service_app
     ports:
       - 5432:5432
     networks:

@@ -5,14 +5,13 @@ import com.argus.bankservice.entity.Customer;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Service
 public interface AccountService {
 
-    Account withdraw(BigDecimal amount, Account account);
+    Account withdraw(BigDecimal amount, Customer customer);
 
-    Account replenish(BigDecimal amount, Account account);
+    Account replenish(BigDecimal amount, Customer customer);
 
     /**
      * Перевод денег с аккаунта на аккаунт
@@ -21,7 +20,9 @@ public interface AccountService {
      * @param from   с какого аккаунта
      * @param to     на какой аккаунт
      */
-    void transfer(BigDecimal amount, Account from, Account to);
+    void transfer(BigDecimal amount, Customer from, Customer to);
 
     Account findByOwner(Customer owner);
+
+    void updateBalance(BigDecimal amount, Customer customer);
 }

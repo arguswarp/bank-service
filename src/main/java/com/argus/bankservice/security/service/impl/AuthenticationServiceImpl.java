@@ -64,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param signInRequest данные для входа
      * @return jwt токен
      */
-    @Transactional(readOnly = true)
+
     @Override
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
