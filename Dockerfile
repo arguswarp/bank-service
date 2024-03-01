@@ -1,10 +1,10 @@
-FROM maven:3.9.4-eclipse-temurin-20-alpine as build
+FROM maven:3.9.4-eclipse-temurin-17-alpine as build
 WORKDIR /build
 COPY src src
 COPY pom.xml pom.xml
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -Dmaven.test.skip=true
 
-FROM eclipse-temurin:20-alpine
+FROM eclipse-temurin:17-alpine
 
 RUN addgroup spring-boot-group && adduser --ingroup spring-boot-group --disabled-password spring-boot
 USER spring-boot
