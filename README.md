@@ -1,4 +1,4 @@
-# Banl Service REST App
+# Bank Service REST App
 
 ## Description
 This is app with a simple banking operations (like money transfer) and authorization via JWT token
