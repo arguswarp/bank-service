@@ -25,6 +25,8 @@ public interface CustomerService {
 
     Customer findByEmail(String email);
 
+    Customer findById(Long id);
+
     Page<Customer> findAll(Pageable pageable);
 
     Page<Customer> findAllByDateOfBirth(LocalDate date, Pageable pageable);

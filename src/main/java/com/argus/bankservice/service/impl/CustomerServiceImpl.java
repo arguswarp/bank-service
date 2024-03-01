@@ -66,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findByPhone(String phone) {
         var contact = contactRepository.getContactByPhone(phone);
         if (contact.isPresent()) {
-            return customerRepository.findByContactsIsContaining(contact.get()).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+            return customerRepository.findByContactsContaining(contact.get()).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         }
         return customerRepository.findByPhone(phone).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
@@ -75,9 +75,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findByEmail(String email) {
         var contact = contactRepository.getContactByEmail(email);
         if (contact.isPresent()) {
-            return customerRepository.findByContactsIsContaining(contact.get()).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+            return customerRepository.findByContactsContaining(contact.get()).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         }
         return customerRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
+    @Override
+    public Customer findById(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
 
     @Override
