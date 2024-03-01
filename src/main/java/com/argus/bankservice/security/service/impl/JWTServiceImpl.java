@@ -21,8 +21,8 @@ import java.util.function.Function;
 public class JWTServiceImpl implements JWTService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
-
-    private final static long EXP_MINUTES = 60;
+    @Value("${token.expiration.minutes}")
+    private long expMinutes;
 
     @Override
     public String extractUserName(String token) {
@@ -64,7 +64,7 @@ public class JWTServiceImpl implements JWTService {
                 .claims().add(extraClaims).and()
                 .subject(userDetails.getUsername())
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plus(EXP_MINUTES, ChronoUnit.MINUTES)))
+                .expiration(Date.from(Instant.now().plus(expMinutes, ChronoUnit.MINUTES)))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }

@@ -89,7 +89,6 @@ public class CustomerController {
         } else if (direction.equals("desc")) {
             return Sort.Direction.DESC;
         }
-
         return Sort.Direction.ASC;
     }
 
@@ -99,7 +98,7 @@ public class CustomerController {
         customerService.addContact(contactDTO, customer);
         return ResponseEntity.ok().build();
     }
-
+    //TODO: mb change entities
     @DeleteMapping("/contact/delete")
     public ResponseEntity<?> deleteContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication) {
         var customer = AuthUtils.getCustomer(authentication);
