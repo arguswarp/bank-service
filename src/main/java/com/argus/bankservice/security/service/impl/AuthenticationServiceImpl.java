@@ -40,7 +40,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     @Override
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        var account = Account.builder().deposit(signUpRequest.getDeposit()).balance(signUpRequest.getDeposit()).build();
         var customer = Customer.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
@@ -50,9 +49,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .fullName(signUpRequest.getFullName())
                 .dateOfBirth(signUpRequest.getDateOfBirth())
                 .build();
-        customerService.create(customer);
+        var account = Account.builder().deposit(signUpRequest.getDeposit()).balance(signUpRequest.getDeposit()).build();
         customer.setAccount(account);
         account.setOwner(customer);
+        customerService.create(customer);
         accountRepository.save(account);
         var token = jwtService.generateToken(new CustomerDetails(customer));
         return new JwtAuthenticationResponse(token);
