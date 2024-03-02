@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AccountController {
     private final AccountService accountService;
-
     private final CustomerService customerService;
 
     @GetMapping("/balance")
@@ -52,15 +51,11 @@ public class AccountController {
     }
 
     @PatchMapping("/transfer")
-    public ResponseEntity<?> transferMoney(@Valid @RequestBody ChangeBalanceRequest withdrawRequest,
-                                           @RequestParam Long id,
-                                           Authentication authentication) {
+    public ResponseEntity<?> transferMoney(@Valid @RequestBody ChangeBalanceRequest withdrawRequest, @RequestParam Long id, Authentication authentication) {
         var customer = AuthUtils.getCustomer(authentication);
         var accountFrom = accountService.findByOwner(customer);
         var customerTo = customerService.findById(id);
-
         accountService.transfer(withdrawRequest.getAmount(), customer, customerTo);
-
         return ResponseEntity.ok(accountFrom.getBalance());
     }
 }

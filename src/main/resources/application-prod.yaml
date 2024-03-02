@@ -16,3 +16,6 @@ token:
     key: ${TOKEN_SECRET}
   expiration:
     minutes: ${EXP_MINUTES}
+logging:
+  level:
+    root: info

@@ -5,6 +5,7 @@ import com.argus.bankservice.dto.ContactUpdateDTO;
 import com.argus.bankservice.entity.Customer;
 import com.argus.bankservice.service.CustomerService;
 import com.argus.bankservice.util.AuthUtils;
+import com.argus.bankservice.util.ValidationUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -93,14 +95,17 @@ public class CustomerController {
     }
 
     @PostMapping("/contact/add")
-    public ResponseEntity<?> addContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication) {
+    public ResponseEntity<?> addContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication, BindingResult bindingResult) {
+        ValidationUtils.checkValidationErrors(bindingResult);
         var customer = AuthUtils.getCustomer(authentication);
         customerService.addContact(contactDTO, customer);
         return ResponseEntity.ok().build();
     }
+
     //TODO: mb change entities
     @DeleteMapping("/contact/delete")
-    public ResponseEntity<?> deleteContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication) {
+    public ResponseEntity<?> deleteContact(@Valid @RequestBody ContactDTO contactDTO, Authentication authentication, BindingResult bindingResult) {
+        ValidationUtils.checkValidationErrors(bindingResult);
         var customer = AuthUtils.getCustomer(authentication);
         if (contactDTO.getPhone() != null) {
             customerService.deletePhone(contactDTO.getPhone(), customer);
@@ -114,7 +119,12 @@ public class CustomerController {
     }
 
     @PatchMapping("/contact/update")
-    public ResponseEntity<?> updateContact(@Valid @RequestBody ContactUpdateDTO contactUpdateDTO, @RequestParam(required = false) String type, Authentication authentication) {
+    public ResponseEntity<?> updateContact(@Valid @RequestBody ContactUpdateDTO contactUpdateDTO,
+                                           @RequestParam(required = false) String type,
+                                           Authentication authentication,
+                                           BindingResult bindingResult
+    ) {
+        ValidationUtils.checkValidationErrors(bindingResult);
         var customer = AuthUtils.getCustomer(authentication);
         if (type != null && type.equals("additional")) {
             customerService.updateAdditionalContact(contactUpdateDTO, customer);
