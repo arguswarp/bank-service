@@ -3,17 +3,18 @@ package com.argus.bankservice.service.impl;
 import com.argus.bankservice.entity.Account;
 import com.argus.bankservice.entity.Customer;
 import com.argus.bankservice.entity.enums.Role;
-import com.argus.bankservice.exception.CustomerAlreadyExistException;
 import com.argus.bankservice.exception.OverdraftException;
+import com.argus.bankservice.repository.AccountRepository;
+import com.argus.bankservice.repository.ContactRepository;
+import com.argus.bankservice.repository.CustomerRepository;
 import com.argus.bankservice.service.AccountService;
 import com.argus.bankservice.service.CustomerService;
+import com.argus.bankservice.service.PostgresTestWithContainers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,14 +25,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-@SpringBootTest
-@ActiveProfiles("test")
 @Slf4j
-class AccountServiceImplTest {
+class AccountServiceImplTest extends PostgresTestWithContainers {
     @Autowired
     private AccountService accountService;
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private ContactRepository contactRepository;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(20);
     Customer customer1;
@@ -39,70 +46,59 @@ class AccountServiceImplTest {
     Customer customer3;
 
     @BeforeEach
-    void prepare() {
-        try {
-            var account1 = accountService.createAccount(Account.builder()
-                    .deposit(BigDecimal.valueOf(1000))
-                    .balance(BigDecimal.valueOf(1000))
-                    .owner(customer1)
-                    .build()
-            );
-            var account2 = accountService.createAccount(Account.builder()
-                    .deposit(BigDecimal.valueOf(1000))
-                    .balance(BigDecimal.valueOf(1000))
-                    .owner(customer2)
-                    .build()
-            );
-            var account3 = accountService.createAccount(Account.builder()
-                    .deposit(BigDecimal.valueOf(1000))
-                    .balance(BigDecimal.valueOf(1000))
-                    .owner(customer3)
-                    .build()
-            );
-            customer1 = customerService.create(Customer.builder()
-                    .id(1L)
-                    .username("user1")
-                    .email("1@mail.ru")
-                    .role(Role.ROLE_USER)
-                    .phone("+79991234567")
-                    .dateOfBirth(LocalDate.of(2000, 1, 1))
-                    .fullName("Ivanov Ivan Ivanych")
-                    .password("123456789")
-                    .account(account1)
-                    .build());
-            customer2 = customerService.create(Customer.builder()
-                    .id(2L)
-                    .username("user2")
-                    .email("2@mail.ru")
-                    .role(Role.ROLE_USER)
-                    .phone("+79891234567")
-                    .dateOfBirth(LocalDate.of(2000, 1, 1))
-                    .fullName("Porfiry")
-                    .password("123456789")
-                    .account(account2)
-                    .build());
-            customer2 = customerService.create(Customer.builder()
-                    .id(3L)
-                    .username("user3")
-                    .email("3@mail.ru")
-                    .role(Role.ROLE_USER)
-                    .phone("+79791234567")
-                    .dateOfBirth(LocalDate.of(2000, 1, 1))
-                    .fullName("Batman")
-                    .password("123456789")
-                    .account(account3)
-                    .build());
-        } catch (CustomerAlreadyExistException e) {
-            log.info("Юзеры уже есть");
-        } finally {
-            customer1 = customerService.findById(1L);
-            customer2 = customerService.findById(2L);
-            customer3 = customerService.findById(3L);
+    void prepareDB() {
+        contactRepository.deleteAll();
+        customerRepository.deleteAll();
+        accountRepository.deleteAll();
 
-            accountService.updateBalance(BigDecimal.valueOf(1000), customer1);
-            accountService.updateBalance(BigDecimal.valueOf(1000), customer2);
-            accountService.updateBalance(BigDecimal.valueOf(1000), customer3);
-        }
+        var account1 = accountService.createAccount(Account.builder()
+                .deposit(BigDecimal.valueOf(1000))
+                .balance(BigDecimal.valueOf(1000))
+                .owner(customer1)
+                .build()
+        );
+        var account2 = accountService.createAccount(Account.builder()
+                .deposit(BigDecimal.valueOf(1000))
+                .balance(BigDecimal.valueOf(1000))
+                .owner(customer2)
+                .build()
+        );
+        var account3 = accountService.createAccount(Account.builder()
+                .deposit(BigDecimal.valueOf(1000))
+                .balance(BigDecimal.valueOf(1000))
+                .owner(customer3)
+                .build()
+        );
+        customer1 = customerService.create(Customer.builder()
+                .username("user1")
+                .email("1@mail.ru")
+                .role(Role.ROLE_USER)
+                .phone("+79991234567")
+                .dateOfBirth(LocalDate.of(2000, 1, 1))
+                .fullName("Ivanov Ivan Ivanych")
+                .password("123456789")
+                .account(account1)
+                .build());
+        customer2 = customerService.create(Customer.builder()
+                .username("user2")
+                .email("2@mail.ru")
+                .role(Role.ROLE_USER)
+                .phone("+79891234567")
+                .dateOfBirth(LocalDate.of(2000, 1, 1))
+                .fullName("Porfiry")
+                .password("123456789")
+                .account(account2)
+                .build());
+        customer3 = customerService.create(Customer.builder()
+                .username("user3")
+                .email("3@mail.ru")
+                .role(Role.ROLE_USER)
+                .phone("+79791234567")
+                .dateOfBirth(LocalDate.of(2000, 1, 1))
+                .fullName("Batman")
+                .password("123456789")
+                .account(account3)
+                .build());
     }
 
     @Test
@@ -133,13 +129,13 @@ class AccountServiceImplTest {
 
         executorService.shutdown();
 
-        Customer customer11 = customerService.findById(1L);
-        Customer customer22 = customerService.findById(2L);
-        Customer customer33 = customerService.findById(3L);
+        customer1 = customerService.findByUsername("user1");
+        customer2 = customerService.findByUsername("user2");
+        customer3 = customerService.findByUsername("user3");
 
-        int balance1 = customer11.getAccount().getBalance().intValue();
-        int balance2 = customer22.getAccount().getBalance().intValue();
-        int balance3 = customer33.getAccount().getBalance().intValue();
+        int balance1 = accountService.findByOwner(customer1).getBalance().intValue();
+        int balance2 = accountService.findByOwner(customer2).getBalance().intValue();
+        int balance3 = accountService.findByOwner(customer3).getBalance().intValue();
 
         log.info(String.format("Balance after, customer 1: %d, customer 2: %d, customer 3: %d", balance1, balance2, balance3));
         log.info("Успешных переводов из 500 всего: " + count);
