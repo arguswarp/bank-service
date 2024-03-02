@@ -26,7 +26,7 @@ public class Customer {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
     @JsonIgnore()
-    @Column(name = "password", unique = true, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
     @JsonIgnore
     @Enumerated(value = EnumType.STRING)
@@ -43,7 +43,7 @@ public class Customer {
     @Column(name = "phone", unique = true, nullable = false)
     private String phone;
     @JsonIgnore
-    @Column(name = "date_of_birth", unique = true, nullable = false)
+    @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
     /**
      * дополнительные контакты

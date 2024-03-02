@@ -25,4 +25,6 @@ public interface AccountService {
     Account findByOwner(Customer owner);
 
     void updateBalance(BigDecimal amount, Customer customer);
+
+    Account createAccount(Account account);
 }

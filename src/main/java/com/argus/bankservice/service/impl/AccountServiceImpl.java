@@ -107,6 +107,11 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.updateBalanceByOwner(amount, customer);
     }
 
+    @Override
+    public Account createAccount(Account account) {
+        return accountRepository.save(account);
+    }
+
     private Boolean isBalanceNegative(BigDecimal balance) {
         return balance.signum() < 0;
     }
