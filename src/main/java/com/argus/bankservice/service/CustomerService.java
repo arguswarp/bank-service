@@ -6,11 +6,9 @@ import com.argus.bankservice.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@Service
 public interface CustomerService {
 
     UserDetailsService userDetailsService();

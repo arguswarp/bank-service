@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: true
+token:
+  signing:
+    key: VERYSECRETKEYFORTESTINGPURPOSESONLYANDAGAINVERYSECRETKEYFORTESTINGPURPOSESONLY
+  expiration:
+    minutes: 480
+logging:
+  level:
+    root: info

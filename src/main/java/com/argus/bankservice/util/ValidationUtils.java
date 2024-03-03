@@ -1,17 +1,19 @@
 package com.argus.bankservice.util;
 
-import jakarta.validation.ValidationException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ValidationUtils {
-    public static void checkValidationErrors(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult.getFieldErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(". ")));
-        }
+    public static Map<String, String> fieldErrorsMap(BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+        bindingResult.getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

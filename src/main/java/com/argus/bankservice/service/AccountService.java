@@ -2,11 +2,9 @@ package com.argus.bankservice.service;
 
 import com.argus.bankservice.entity.Account;
 import com.argus.bankservice.entity.Customer;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-@Service
 public interface AccountService {
 
     Account withdraw(BigDecimal amount, Customer customer);

@@ -48,9 +48,9 @@ public class Customer {
     /**
      * дополнительные контакты
      */
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Contact> contacts;
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Account account;
 }
