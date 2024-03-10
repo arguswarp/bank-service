@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  datasource:
+    url: jdbc:tc:postgresql://localhost:5432/bank_service_app
   jpa:
     show-sql: true
     hibernate:

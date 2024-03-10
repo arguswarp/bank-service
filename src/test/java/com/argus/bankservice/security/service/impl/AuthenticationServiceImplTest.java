@@ -20,6 +20,7 @@ import java.util.List;
 
 @Slf4j
 class AuthenticationServiceImplTest extends PostgresTestWithContainers {
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -41,7 +42,7 @@ class AuthenticationServiceImplTest extends PostgresTestWithContainers {
         accountRepository.deleteAll();
 
         signUpRequest = SignUpRequest.builder()
-                .username("Darth Vader")
+                .username("DarthVader")
                 .password("deathstar333")
                 .email("any@darkside.com")
                 .phone("+79990001138")

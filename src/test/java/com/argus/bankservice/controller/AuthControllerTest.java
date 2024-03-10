@@ -19,6 +19,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -57,31 +58,32 @@ class AuthControllerTest extends PostgresTestWithContainers {
 
         token = null;
         request = new HashMap<>();
-        request.put("username", "Darth Vader");
+        request.put("username", "DarthVader");
         request.put("password", "deathstar333");
         request.put("email", "any@darkside.com");
         request.put("phone", "+79990001138");
         request.put("fullName", "Anakin Skywalker");
         request.put("dateOfBirth", "25.05.1977");
         request.put("deposit", "1000");
-
     }
 
     @Test
+    @Transactional
     void WhenSignUp_ThenCode200() {
         ResponseEntity<JwtAuthenticationResponse> signUpResponse = testRestTemplate.postForEntity(BASE_URI + port + SIGN_UP_URI,
                 request,
                 JwtAuthenticationResponse.class);
         token = signUpResponse.getBody();
         Assertions.assertNotNull(token);
-        Assertions.assertTrue(jwtService.isValidToken(token.getToken(), customerService.userDetailsService().loadUserByUsername("Darth Vader")));
+        Assertions.assertTrue(jwtService.isValidToken(token.getToken(), customerService.userDetailsService().loadUserByUsername("DarthVader")));
         Assertions.assertEquals(HttpStatus.OK, signUpResponse.getStatusCode());
     }
 
     @Test
+    @Transactional
     void WhenSignIn_ThenCode200() {
         customerRepository.save(Customer.builder()
-                .username("Darth Vader")
+                .username("DarthVader")
                 .password(passwordEncoder.encode("deathstar333"))
                 .email("any@darkside.com")
                 .phone("+79990001138")
@@ -92,16 +94,17 @@ class AuthControllerTest extends PostgresTestWithContainers {
 
         ResponseEntity<JwtAuthenticationResponse> signInResponse = testRestTemplate.postForEntity(BASE_URI + port + SIGN_IN_URI,
                 SignInRequest.builder()
-                        .username("Darth Vader")
+                        .username("DarthVader")
                         .password("deathstar333")
                         .build(), JwtAuthenticationResponse.class);
         token = signInResponse.getBody();
         Assertions.assertNotNull(token);
-        Assertions.assertTrue(jwtService.isValidToken(token.getToken(), customerService.userDetailsService().loadUserByUsername("Darth Vader")));
+        Assertions.assertTrue(jwtService.isValidToken(token.getToken(), customerService.userDetailsService().loadUserByUsername("DarthVader")));
         Assertions.assertEquals(HttpStatus.OK, signInResponse.getStatusCode());
     }
 
     @Test
+    @Transactional
     void WhenSignUpWithBadData_ThenBadRequest() {
         request.put("username", "a");
         request.put("email", "1");
