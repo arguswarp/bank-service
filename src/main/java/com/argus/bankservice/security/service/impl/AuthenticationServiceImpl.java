@@ -3,9 +3,6 @@ package com.argus.bankservice.security.service.impl;
 import com.argus.bankservice.dto.JwtAuthenticationResponse;
 import com.argus.bankservice.dto.SignInRequest;
 import com.argus.bankservice.dto.SignUpRequest;
-import com.argus.bankservice.entity.Account;
-import com.argus.bankservice.entity.Customer;
-import com.argus.bankservice.entity.enums.Role;
 import com.argus.bankservice.entity.mapper.CustomerMapper;
 import com.argus.bankservice.repository.AccountRepository;
 import com.argus.bankservice.security.CustomerDetails;
@@ -15,7 +12,6 @@ import com.argus.bankservice.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
