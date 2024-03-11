@@ -6,6 +6,7 @@ import com.argus.bankservice.dto.SignUpRequest;
 import com.argus.bankservice.entity.Account;
 import com.argus.bankservice.entity.Customer;
 import com.argus.bankservice.entity.enums.Role;
+import com.argus.bankservice.entity.mapper.CustomerMapper;
 import com.argus.bankservice.repository.AccountRepository;
 import com.argus.bankservice.security.CustomerDetails;
 import com.argus.bankservice.security.service.AuthenticationService;
@@ -27,9 +28,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JWTService jwtService;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
+
+    private final CustomerMapper customerMapper;
 
     /**
      * Регистрация пользователя
@@ -40,18 +41,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     @Override
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
-        var customer = Customer.builder()
-                .username(signUpRequest.getUsername())
-                .email(signUpRequest.getEmail())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .role(Role.ROLE_USER)
-                .phone(signUpRequest.getPhone())
-                .fullName(signUpRequest.getFullName())
-                .dateOfBirth(signUpRequest.getDateOfBirth())
-                .build();
-        var account = Account.builder().deposit(signUpRequest.getDeposit()).balance(signUpRequest.getDeposit()).build();
-        customer.setAccount(account);
-        account.setOwner(customer);
+        var customer = customerMapper.signUpRequestToCustomer(signUpRequest);
+        var account = customer.getAccount();
         customerService.create(customer);
         accountRepository.save(account);
         var token = jwtService.generateToken(new CustomerDetails(customer));

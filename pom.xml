@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.6.0.Beta1</version>
+            <version>1.5.5.Final</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -68,8 +68,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
             <optional>true</optional>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>0.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -109,7 +115,7 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct</artifactId>
+                            <artifactId>mapstruct-processor</artifactId>
                             <version>1.5.5.Final</version>
                         </path>
                         <path>
